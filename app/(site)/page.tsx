@@ -26,7 +26,9 @@ export default async function Homepage() {
     <img className="yacht-award" src="/assets/images/home/european-yacht-of-the-year-2022-award-383.webp" alt="European Yacht of the Year 2022" width="383" height="561" />
     {fields.text_section_1 && <section className="intro" dangerouslySetInnerHTML={{ __html: richText(fields.text_section_1, site) }} />}
     {boats.map((boat, index) => <section className={`split${index % 2 ? ' reverse' : ''}`} key={`${index}-${boat.button_link}`}>
-      <img {...(imageProps(boat.boat_image, site, `${boat.button_text?.replace(/^Explore\s+/i, '') || 'Performance yacht'} sailing`) || boatPlaceholder)} loading="lazy" decoding="async" sizes="(max-width:600px) 92vw, 47vw" />
+      <div className="boat-image">
+        <img {...(imageProps(boat.boat_image, site, `${boat.button_text?.replace(/^Explore\s+/i, '') || 'Performance yacht'} sailing`) || boatPlaceholder)} loading="lazy" decoding="async" sizes="(max-width:600px) 92vw, 47vw" />
+      </div>
       <div className="split-copy"><div dangerouslySetInnerHTML={{ __html: richText(boat.boat_text, site) }} />
         {boat.button_text && boat.button_link && <a className="button" href={boat.button_link}>{boat.button_text}</a>}
       </div>

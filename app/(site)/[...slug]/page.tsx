@@ -32,7 +32,7 @@ export default async function GenericPage({ params }: CmsPageProps) {
         {hero?.hero_sub_text && <div dangerouslySetInnerHTML={{ __html: richText(hero.hero_sub_text, site, { preserveLinks: true }) }} />}
       </div>
     </section>
-    <section className="page-content">
+    <section className="page-content" style={{ backgroundColor: page.acf?.body_background_color || '#ffffff' }}>
       <div className="prose" dangerouslySetInnerHTML={{ __html: richText(page.content?.html, site, { preserveLinks: true }) }} />
     </section>
   </>;

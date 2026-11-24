@@ -23,7 +23,7 @@
 }
 
 :root {
-  --ink: #323738;
+  --ink: #000000;
   --muted: #6d7273;
   --sea: #07899d;
   --frame: 3.65%;
@@ -994,9 +994,10 @@ figcaption {
 .not-found-layout > .not-found-page { flex: 1; min-height: 0; }
 
 /* Generic CMS pages: full-width hero and centered editor content. */
+.page-hero { overflow: hidden; }
 .hero > .hero-image { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
 .page-content { padding: 70px 24px 110px; }
-.page-content .prose { max-width: 740px; margin: auto; }
+.page-content .prose { max-width: 940px; margin: auto; }
 .page-content .prose > h2:first-child { text-align: center; margin-bottom: 65px; }
 @media (max-width: 600px) {
   .page-content { padding: 55px 28px 65px; }
@@ -1010,3 +1011,57 @@ figcaption {
 .site-shell:has(.not-found-in-site) > .site-footer,
 .site-background:has(.not-found-in-site) > .back-to-top { display: none; }
 .not-found-in-site { flex: 1; display: grid; place-items: center; padding: 32px 20px; color: white; text-align: center; }
+
+/* Boat photos fill the row independently of their original image proportions. */
+.boat-image { position: relative; min-width: 0; min-height: 430px; overflow: hidden; }
+.boat-image > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.split.reverse > .boat-image { grid-column: 2; grid-row: 1; }
+@media (min-width: 1800px) { .boat-image { min-height: 560px; } }
+@media (max-width: 900px) { .boat-image { min-height: 330px; } }
+@media (max-width: 600px) { .boat-image { width: 100%; min-height: 0; aspect-ratio: 4 / 3; flex-shrink: 0; } }
+
+.wp-block-table {
+  margin-left:0px;
+  margin-right:0px;
+}
+/* Preserve Gutenberg text colors inside generic CMS content. */
+.page-content :where(p, h1, h2, h3, h4, h5, h6, a, th, td, figcaption) { color: inherit; }
+.page-content .has-black-color { color: #000000; }
+.page-content .has-black-background-color { background-color: #000000; }
+.page-content .has-cyan-bluish-gray-color { color: #abb8c3; }
+.page-content .has-cyan-bluish-gray-background-color { background-color: #abb8c3; }
+.page-content .has-white-color { color: #ffffff; }
+.page-content .has-white-background-color { background-color: #ffffff; }
+.page-content .has-pale-pink-color { color: #f78da7; }
+.page-content .has-pale-pink-background-color { background-color: #f78da7; }
+.page-content .has-vivid-red-color { color: #cf2e2e; }
+.page-content .has-vivid-red-background-color { background-color: #cf2e2e; }
+.page-content .has-luminous-vivid-orange-color { color: #ff6900; }
+.page-content .has-luminous-vivid-orange-background-color { background-color: #ff6900; }
+.page-content .has-luminous-vivid-amber-color { color: #fcb900; }
+.page-content .has-luminous-vivid-amber-background-color { background-color: #fcb900; }
+.page-content .has-light-green-cyan-color { color: #7bdcb5; }
+.page-content .has-light-green-cyan-background-color { background-color: #7bdcb5; }
+.page-content .has-vivid-green-cyan-color { color: #00d084; }
+.page-content .has-vivid-green-cyan-background-color { background-color: #00d084; }
+.page-content .has-pale-cyan-blue-color { color: #8ed1fc; }
+.page-content .has-pale-cyan-blue-background-color { background-color: #8ed1fc; }
+.page-content .has-vivid-cyan-blue-color { color: #0693e3; }
+.page-content .has-vivid-cyan-blue-background-color { background-color: #0693e3; }
+.page-content .has-vivid-purple-color { color: #9b51e0; }
+.page-content .has-vivid-purple-background-color { background-color: #9b51e0; }
+
+.page-content {
+  --wp--preset--color--black: #000000;
+  --wp--preset--color--cyan-bluish-gray: #abb8c3;
+  --wp--preset--color--white: #ffffff;
+  --wp--preset--color--pale-pink: #f78da7;
+  --wp--preset--color--vivid-red: #cf2e2e;
+  --wp--preset--color--luminous-vivid-orange: #ff6900;
+  --wp--preset--color--luminous-vivid-amber: #fcb900;
+  --wp--preset--color--light-green-cyan: #7bdcb5;
+  --wp--preset--color--vivid-green-cyan: #00d084;
+  --wp--preset--color--pale-cyan-blue: #8ed1fc;
+  --wp--preset--color--vivid-cyan-blue: #0693e3;
+  --wp--preset--color--vivid-purple: #9b51e0;
+}

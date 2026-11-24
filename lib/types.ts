@@ -75,6 +75,7 @@ export interface Boat {
 }
 
 export interface CmsFields {
+  body_background_color?: string | null;
   hero_section?: { hero_image?: MediaImage | null; hero_sub_text?: string | null };
   home_slider_title?: string | null;
   home_slider_sub_title?: string | null;
