@@ -111,6 +111,28 @@ export interface CmsIndex {
 }
 
 export interface HomepageData {
+  navigation: NavigationData;
   site: CmsSite;
   page: CmsPage;
+}
+
+export interface MenuItem {
+  id: number;
+  parent_id: number;
+  title: string;
+  url: string;
+  target: string;
+  rel: string;
+  classes: string[];
+  object_type: string;
+  object_id: number;
+  children: MenuItem[];
+}
+
+export interface NavigationData {
+  schema_version: number;
+  generated_at: string;
+  location: string;
+  menu: { id: number; name: string; slug: string } | null;
+  items: MenuItem[];
 }

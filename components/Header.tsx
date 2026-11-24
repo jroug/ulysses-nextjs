@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import type { Boat, CmsSite, NavigationLink, RenderedImage, SocialLinks as SocialLinkData, SocialPlatform } from '../lib/types';
-import { imageProps, pageUrl } from '../lib/cms';
+import type { CmsSite, MenuItem, RenderedImage, SocialLinks as SocialLinkData, SocialPlatform } from '../lib/types';
+import { imageProps } from '../lib/cms';
 import Navigation from './Navigation';
 
 function SocialLinks({ links }: { links?: SocialLinkData }) {
@@ -14,15 +14,13 @@ function SocialLinks({ links }: { links?: SocialLinkData }) {
 
 const fallbackLogo: RenderedImage = { src: '/assets/images/placeholder.svg', alt: 'Logo placeholder', width: 214, height: 106 };
 
-export default function Header({ site, boats }: { site: CmsSite; boats: Boat[] }) {
-  const navigation = [['Training Schedule', '/training-schedule'], ['Pricelist', '/pricelist'], ['News', '/news'], ['About Us', '/about-us'], ['Contact', '/contact']].map(([label, href]) => ({ label, href: pageUrl(href) }));
-  const boatLinks: NavigationLink[] = boats.filter((boat) => Boolean(boat.button_link)).map((boat, index) => ({ label: boat.button_text?.replace(/^Explore\s+/i, '') || `Yacht ${index + 1}`, href: boat.button_link || '/' }));
+export default function Header({ site, items }: { site: CmsSite; items: MenuItem[] }) {
 
   return <>
     <a className="skip-link" href="#content">Skip to content</a>
     <header className="site-header" id="top">
       <a className="brand" href="/" aria-label={`${site.name} home`}><img {...(imageProps(site.header_logo, site, site.name) || fallbackLogo)} /></a>
-      <Navigation links={navigation} boats={boatLinks} />
+      <Navigation items={items} />
       <SocialLinks links={site.social_links} />
     </header>
   </>;

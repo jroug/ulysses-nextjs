@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage } from './types';
+import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage, MenuItem, NavigationData } from './types';
 
 // Both local development and production load public CMS JSON over HTTP(S).
 export const getHomepage = cache(async (): Promise<HomepageData> => {
@@ -17,7 +17,11 @@ export const getHomepage = cache(async (): Promise<HomepageData> => {
   const index = await readJson<CmsIndex>('pages.json');
   const entry = index.pages.find((page) => page.is_homepage);
   if (!entry) throw new Error('No published homepage was found in the CMS JSON export.');
-  return { site: index.site, page: await readJson<CmsPage>(entry.file) };
+  const [page, navigation] = await Promise.all([
+    readJson<CmsPage>(entry.file),
+    readJson<NavigationData>('navigation.json'),
+  ]);
+  return { site: index.site, page, navigation: { ...navigation, items: navigation.items.map((item) => frontendMenuItem(item, index.site)) } };
 });
 
 export function mediaUrl(url: string | null | undefined, site: CmsSite): string {
@@ -73,4 +77,17 @@ export function imageProps(image: MediaImage | null | undefined, site: CmsSite, 
       return `${mediaUrl(url, site)} ${size}`;
     }).join(', ') : undefined,
   };
+}
+
+/** WordPress page links become frontend paths; external/custom destinations are preserved. */
+function frontendMenuItem(item: MenuItem, site: CmsSite): MenuItem {
+  let url = item.url;
+  for (const source of [site.wordpress_url, process.env.CMS_BASE_URL]) {
+    const base = source?.replace(/\/$/, '');
+    if (base && (url === base || url.startsWith(base + '/'))) {
+      url = url.slice(base.length) || '/';
+      break;
+    }
+  }
+  return { ...item, url, children: item.children.map((child) => frontendMenuItem(child, site)) };
 }
