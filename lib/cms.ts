@@ -40,8 +40,17 @@ export const getPageByPath = cache(async (pathname: string) => {
   return entry ? { site: index.site, page: await readJson<CmsPage>(entry.file) } : null;
 });
 
+function uploadPrefixes(site: CmsSite): string[] {
+  return [site.wordpress_url, process.env.CMS_BASE_URL]
+    .filter((base): base is string => Boolean(base))
+    .map((base) => base.replace(/\/$/, '') + '/wp-content/uploads/');
+}
+
 export function mediaUrl(url: string | null | undefined, site: CmsSite): string {
   if (!url) return '';
+  for (const prefix of uploadPrefixes(site)) {
+    if (url.startsWith(prefix)) return '/media/' + url.slice(prefix.length);
+  }
   const source = site.wordpress_url?.replace(/\/$/, '');
   const target = process.env.CMS_BASE_URL?.replace(/\/$/, '');
   return source && target && (url === source || url.startsWith(source + '/')) ? target + url.slice(source.length) : url;
@@ -72,7 +81,9 @@ export function pageUrl(href: string | null | undefined): string {
 }
 
 export function richText(html: string | null | undefined, site: CmsSite, { preserveLinks = false }: { preserveLinks?: boolean } = {}): string {
-  return (html || '')
+  // Replace upload prefixes throughout rich HTML, including srcset, image links and CSS URLs.
+  const content = uploadPrefixes(site).reduce((value, prefix) => value.split(prefix).join('/media/'), html || '');
+  return content
     .replace(/(src|href)=(['"])(.*?)\2/g, (match: string, key: string, quote: string, value: string) => {
       if (key === 'href' && preserveLinks) return match;
       let url = mediaUrl(value, site);

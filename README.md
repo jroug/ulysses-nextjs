@@ -81,3 +81,11 @@ Assign your menu under Appearance → Menus → Main Navigation. Saving the menu
 `app/(site)/[...slug]/page.tsx` handles every non-homepage URL, including nested paths, by looking up the exact published page path in the CMS manifest. About is now an instance of this template; no About-specific route or page ID remains. The template uses the CMS page title, optional `hero_section`, editor HTML and AIOSEO metadata. Missing hero images use a gray placeholder. Saving/exporting another published CMS page makes its path available without adding a Next.js route or rebuilding. The homepage keeps its dedicated layout and ESPA banner.
 
 `app/(site)/not-found.tsx` supplies the shared-layout 404 content for unknown CMS paths. TypeScript checks and the production build passed; HTTP checks confirmed the About page returns 200 and unknown single/nested paths return 404.
+
+## Masked media URLs
+
+`next.config.ts` proxies `/media/:path*` to `${CMS_BASE_URL}/wp-content/uploads/:path*` before the generic page route. Local development therefore uses the local WordPress upload directory over HTTP; Vercel uses the live headless domain from its environment variables. No extra environment variable or WordPress file migration is required. Restart the dev server after pulling this rewrite configuration, and redeploy Vercel to publish it (rewrite destinations are set during the build).
+
+CMS images and responsive `srcset` values use same-origin `/media/...` URLs. Upload references inside rich HTML, including CSS backgrounds, responsive image lists and linked images, are masked too. Open Graph/Twitter image URLs use the frontend origin plus `/media/...`. Canonical page URLs and unrelated external media/social links are preserved; WordPress JSON continues to contain its original URLs. Original CMS URLs remain publicly accessible; the rewrite is a proxy, not access control.
+
+Local validation confirmed original image bytes and HTTP 200 without redirects, and checked 32 rendered image/responsive URLs across the homepage and About page. TypeScript and production build passed. Live publishing could not be performed from this workspace because Vercel CLI has no login credentials.
