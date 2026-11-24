@@ -1,19 +1,22 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { RenderedImage } from '../lib/types';
 
-export default function Slideshow({ images, title, subtitle }) {
-  const hero = useRef(null);
+interface SlideshowProps { images: RenderedImage[]; title?: string | null; subtitle?: string | null; }
+
+export default function Slideshow({ images, title, subtitle }: SlideshowProps) {
+  const hero = useRef<HTMLElement>(null);
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
   const [current, setCurrent] = useState(0);
-  const [previous, setPrevious] = useState(null);
+  const [previous, setPrevious] = useState<number | null>(null);
   const [loaded, setLoaded] = useState([0]);
 
   useEffect(() => {
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    function start(event) {
-      if (motion.matches || event.target.closest?.('.slideshow-pause')) return;
+    function start(event: Event) {
+      if (motion.matches || (event.target instanceof Element && event.target.closest('.slideshow-pause'))) return;
       setStarted(true); setPlaying(true);
     }
     function stop() { setPlaying(false); }
@@ -33,8 +36,8 @@ export default function Slideshow({ images, title, subtitle }) {
       const next = (current + 1) % images.length;
       setLoaded((values) => values.includes(next) ? values : [...values, next]);
       // Let React attach the next source, then wait until it is decoded.
-      await new Promise((resolve) => requestAnimationFrame(resolve));
-      const image = hero.current?.querySelectorAll('.hero-slide')[next];
+      await new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+      const image = hero.current?.querySelectorAll<HTMLImageElement>('.hero-slide')[next];
       try { await image?.decode(); } catch { return; }
       if (!cancelled) { setPrevious(current); setCurrent(next); }
     }, 5000);
@@ -43,7 +46,7 @@ export default function Slideshow({ images, title, subtitle }) {
 
   return <section ref={hero} className="hero home-hero" aria-label="Sailing in Greece">
     <div className="hero-slides" aria-hidden="true">
-      {images.map((image, index) => <img key={image.src} {...image}
+      {images.map((image, index) => <img key={`${index}-${image.src}`} {...image}
         src={loaded.includes(index) ? image.src : undefined}
         srcSet={loaded.includes(index) ? image.srcSet : undefined}
         className={`hero-slide${index === current ? ' is-active' : index === previous ? ' is-leaving' : ''}`}

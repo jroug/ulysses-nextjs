@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { NavigationLink } from '../lib/types';
 
-export default function Navigation({ links, boats }) {
+export default function Navigation({ links, boats }: { links: NavigationLink[]; boats: NavigationLink[] }) {
   const [open, setOpen] = useState(false);
   const [yachtsOpen, setYachtsOpen] = useState(false);
-  const container = useRef(null);
-  const toggle = useRef(null);
+  const container = useRef<HTMLDivElement>(null);
+  const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    function close(event) {
-      if (event.type === 'keydown' && event.key !== 'Escape') return;
-      if (event.type === 'click' && container.current?.contains(event.target)) return;
+    function close(event: MouseEvent | KeyboardEvent) {
+      if (event instanceof KeyboardEvent && event.key !== 'Escape') return;
+      if (event.type === 'click' && event.target instanceof Node && container.current?.contains(event.target)) return;
       setOpen(false); setYachtsOpen(false);
       if (event.type === 'keydown') toggle.current?.focus();
     }

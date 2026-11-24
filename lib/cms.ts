@@ -1,32 +1,33 @@
 import { cache } from 'react';
+import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage } from './types';
 
 // Both local development and production load public CMS JSON over HTTP(S).
-export const getHomepage = cache(async () => {
+export const getHomepage = cache(async (): Promise<HomepageData> => {
   const dataUrl = process.env.CMS_DATA_URL;
   if (!dataUrl) throw new Error('CMS_DATA_URL must point to the CMS data URL.');
   const base = new URL(dataUrl.replace(/\/?$/, '/'));
   if (!['http:', 'https:'].includes(base.protocol)) throw new Error('CMS_DATA_URL must use HTTP or HTTPS.');
-  async function readJson(file) {
+  async function readJson<T>(file: string): Promise<T> {
     const url = new URL(file, base);
     if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)) throw new Error('Invalid CMS export path.');
     const response = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
     if (!response.ok) throw new Error(`CMS export unavailable: ${url} (${response.status})`);
-    return response.json();
+    return response.json() as Promise<T>;
   }
-  const index = await readJson('pages.json');
+  const index = await readJson<CmsIndex>('pages.json');
   const entry = index.pages.find((page) => page.is_homepage);
   if (!entry) throw new Error('No published homepage was found in the CMS JSON export.');
-  return { site: index.site, page: await readJson(entry.file) };
+  return { site: index.site, page: await readJson<CmsPage>(entry.file) };
 });
 
-export function mediaUrl(url, site) {
+export function mediaUrl(url: string | null | undefined, site: CmsSite): string {
   if (!url) return '';
   const source = site.wordpress_url?.replace(/\/$/, '');
   const target = process.env.CMS_BASE_URL?.replace(/\/$/, '');
   return source && target && (url === source || url.startsWith(source + '/')) ? target + url.slice(source.length) : url;
 }
 
-const routes = {
+const routes: Record<string, string> = {
   '/': 'index.html', '/the-yachts': 'jpk-39-fc.html',
   '/the-yachts/jpk-39-fc': 'jpk-39-fc.html', '/the-yachts/pogo-36': 'pogo-36.html',
   '/the-yachts/x46': 'x46.html', '/the-yachts/jpk-48-fc': 'jpk-48-fc.html',
@@ -35,23 +36,25 @@ const routes = {
 };
 
 // Only the homepage exists in Next.js; other links use the existing public website.
-export function pageUrl(href) {
+export function pageUrl(href: string | null | undefined): string {
   if (!href || href.startsWith('#')) return href || '/';
   const route = href.split(/[?#]/)[0].replace(/\/$/, '') || '/';
   if (route === '/' || route === 'index.html') return '/';
   const file = routes[route] || (Object.values(routes).includes(route) ? route : null);
   if (!file) return href;
   if (process.env.HTML_BASE_URL) return `${process.env.HTML_BASE_URL.replace(/\/$/, '')}/${file}`;
-  const routePath = {
+  const routePaths: Record<string, string> = {
     'jpk-39-fc.html': '/the-yachts/jpk-39-fc/', 'pogo-36.html': '/the-yachts/pogo-36/',
     'x46.html': '/the-yachts/x46/', 'jpk-48-fc.html': '/the-yachts/jpk-48-fc/',
-  }[file] || `/${file.replace(/\.html$/, '')}/`;
+  };
+  const routePath = routePaths[file] || `/${file.replace(/\.html$/, '')}/`;
   return `${process.env.FRONTEND_BASE_URL?.replace(/\/$/, '') || ''}${routePath}`;
 }
 
-export function richText(html, site) {
+export function richText(html: string | null | undefined, site: CmsSite, { preserveLinks = false }: { preserveLinks?: boolean } = {}): string {
   return (html || '')
-    .replace(/(src|href)=(['"])(.*?)\2/g, (match, key, quote, value) => {
+    .replace(/(src|href)=(['"])(.*?)\2/g, (match: string, key: string, quote: string, value: string) => {
+      if (key === 'href' && preserveLinks) return match;
       let url = mediaUrl(value, site);
       // The CMS currently embeds the QR image using its former HTML asset URL.
       if (/\/assets\/images\/(?:home\/)?ulysses-sailing-esim-qr-code\.(png|webp)$/.test(url)) url = '/assets/images/home/ulysses-sailing-esim-qr-code.webp';
@@ -60,7 +63,7 @@ export function richText(html, site) {
     });
 }
 
-export function imageProps(image, site, fallbackAlt = '') {
+export function imageProps(image: MediaImage | null | undefined, site: CmsSite, fallbackAlt = ''): RenderedImage | null {
   if (!image?.url) return null;
   return {
     src: mediaUrl(image.url, site), alt: image.alt || fallbackAlt,
