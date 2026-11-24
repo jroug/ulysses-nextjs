@@ -1,8 +1,8 @@
 import type { Metadata } from 'next';
-import type { RenderedImage } from '../lib/types';
-import Slideshow from '../components/Slideshow';
-import EspaBanner from '../components/EspaBanner';
-import { getHomepage, imageProps, richText } from '../lib/cms';
+import type { RenderedImage } from '../../lib/types';
+import Slideshow from '../../components/Slideshow';
+import EspaBanner from '../../components/EspaBanner';
+import { getHomepage, imageProps, richText } from '../../lib/cms';
 
 export const dynamic = 'force-dynamic';
 

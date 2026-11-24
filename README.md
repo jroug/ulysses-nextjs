@@ -41,7 +41,7 @@ Header navigation comes from `navigation.json`, exported from the WordPress menu
 
 ## Files
 
-- `app/page.tsx`: homepage and metadata.
+- `app/(site)/page.tsx`: homepage and metadata.
 - `app/layout.tsx` / `app/globals.css`: document and reference styling.
 - `lib/cms.ts`: JSON loading, media and legacy-link helpers.
 - `components/Slideshow.tsx`: play/pause, delayed slide loading and reduced-motion support.
@@ -65,3 +65,7 @@ All application and component source uses `.ts` or `.tsx`. `lib/types.ts` define
 ## WordPress navigation
 
 Assign your menu under Appearance → Menus → Main Navigation. Saving the menu creates/updates `wp-content/data/navigation.json`; the header fetches it over HTTP with no-store caching, so no frontend rebuild is needed for subsequent menu edits. Nested dropdowns support desktop hover and keyboard/click toggles, plus mobile expansion. The active link uses the current Next.js pathname. The live CMS must have the updated Ulysses Custom Code plugin and a generated `navigation.json` before this frontend version is deployed.
+
+## Not-found page
+
+`app/not-found.tsx` provides the full-screen ocean 404 with a warning icon and Return to Home link. It includes the shared CMS header, with a local logo fallback if CMS loading fails. The footer and funding banner remain hidden. The root layout supplies the shared background; the `(site)` route-group layout supplies header/footer/navigation for regular pages. Missing URLs return HTTP 404 and noindex. TypeScript, production build and HTTP checks passed, including HTTP 200 for the regular homepage after the layout extraction.

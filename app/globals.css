@@ -959,3 +959,36 @@ figcaption {
   .menu-item-heading { justify-content: space-between; }
   .main-nav .submenu .submenu { position: static; }
 }
+
+/* Full-screen 404 over the shared ocean background, without site chrome. */
+.not-found-page {
+  min-height: 100vh;
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 32px 20px;
+  background: transparent;
+  color: #fff;
+  text-align: center;
+}
+.not-found-content { display: flex; flex-direction: column; align-items: center; gap: 32px; }
+.not-found-icon { width: 44px; height: 44px; }
+.not-found-content h1 { margin: 0; font-size: clamp(28px, 4vw, 36px); line-height: 1.2; font-weight: 400; }
+.not-found-home {
+  display: inline-block;
+  padding: 13px 25px;
+  border: 1px solid #fff;
+  border-radius: 2px;
+  color: #fff;
+  background: #00526455;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+.not-found-home:hover { color: #075264; background: #fff; }
+
+/* Keep the shared header above the 404 while centering the message below it. */
+.not-found-layout { min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; }
+.not-found-layout > .site-header { flex-shrink: 0; }
+.not-found-layout > .not-found-page { flex: 1; min-height: 0; }
