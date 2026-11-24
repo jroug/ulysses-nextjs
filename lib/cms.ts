@@ -1,27 +1,43 @@
 import { cache } from 'react';
 import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage, MenuItem, NavigationData } from './types';
 
-// Both local development and production load public CMS JSON over HTTP(S).
-export const getHomepage = cache(async (): Promise<HomepageData> => {
+// All environments use the public CMS JSON URLs, with fresh data on each request.
+async function readJson<T>(file: string): Promise<T> {
   const dataUrl = process.env.CMS_DATA_URL;
   if (!dataUrl) throw new Error('CMS_DATA_URL must point to the CMS data URL.');
   const base = new URL(dataUrl.replace(/\/?$/, '/'));
   if (!['http:', 'https:'].includes(base.protocol)) throw new Error('CMS_DATA_URL must use HTTP or HTTPS.');
-  async function readJson<T>(file: string): Promise<T> {
-    const url = new URL(file, base);
-    if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)) throw new Error('Invalid CMS export path.');
-    const response = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
-    if (!response.ok) throw new Error(`CMS export unavailable: ${url} (${response.status})`);
-    return response.json() as Promise<T>;
-  }
-  const index = await readJson<CmsIndex>('pages.json');
+  const url = new URL(file, base);
+  if (url.origin !== base.origin || !url.pathname.startsWith(base.pathname)) throw new Error('Invalid CMS export path.');
+  const response = await fetch(url, { cache: 'no-store', signal: AbortSignal.timeout(10000) });
+  if (!response.ok) throw new Error(`CMS export unavailable: ${url} (${response.status})`);
+  return response.json() as Promise<T>;
+}
+
+const getIndex = cache(() => readJson<CmsIndex>('pages.json'));
+
+export const getSiteData = cache(async () => {
+  const index = await getIndex();
+  const navigation = await readJson<NavigationData>('navigation.json');
+  return { site: index.site, navigation: { ...navigation, items: navigation.items.map((item) => frontendMenuItem(item, index.site)) } };
+});
+
+export const getHomepage = cache(async (): Promise<HomepageData> => {
+  const index = await getIndex();
   const entry = index.pages.find((page) => page.is_homepage);
   if (!entry) throw new Error('No published homepage was found in the CMS JSON export.');
-  const [page, navigation] = await Promise.all([
-    readJson<CmsPage>(entry.file),
-    readJson<NavigationData>('navigation.json'),
-  ]);
-  return { site: index.site, page, navigation: { ...navigation, items: navigation.items.map((item) => frontendMenuItem(item, index.site)) } };
+  return { ...await getSiteData(), page: await readJson<CmsPage>(entry.file) };
+});
+
+export const getPageByPath = cache(async (pathname: string) => {
+  const index = await getIndex();
+  const normalize = (value: string) => {
+    const clean = value.replace(/\/$/, '') || '/';
+    try { return decodeURIComponent(clean); } catch { return clean; }
+  };
+  const normalized = normalize(pathname);
+  const entry = index.pages.find((page) => normalize(page.path) === normalized);
+  return entry ? { site: index.site, page: await readJson<CmsPage>(entry.file) } : null;
 });
 
 export function mediaUrl(url: string | null | undefined, site: CmsSite): string {

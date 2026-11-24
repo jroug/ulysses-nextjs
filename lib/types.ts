@@ -74,7 +74,8 @@ export interface Boat {
   button_link?: string | null;
 }
 
-export interface HomeFields {
+export interface CmsFields {
+  hero_section?: { hero_image?: MediaImage | null; hero_sub_text?: string | null };
   home_slider_title?: string | null;
   home_slider_sub_title?: string | null;
   home_slider?: MediaImage[];
@@ -102,12 +103,13 @@ export interface CmsPage {
   title: string;
   is_homepage: boolean;
   seo: PageSeo;
-  acf?: HomeFields;
+  acf?: CmsFields;
+  content?: { html: string; raw: string };
 }
 
 export interface CmsIndex {
   site: CmsSite;
-  pages: { id: number; is_homepage: boolean; file: string }[];
+  pages: { id: number; slug: string; path: string; is_homepage: boolean; file: string }[];
 }
 
 export interface HomepageData {

@@ -1,6 +1,6 @@
 # Ulysses Next.js homepage
 
-A small Next.js App Router frontend matching `../html/index.html`. Only `/` is implemented. Runtime dependencies are Next.js, React and React DOM; TypeScript and Node/React type definitions are development dependencies; styling reuses the HTML homepage CSS and local Lato fonts.
+A small Next.js App Router frontend matching `../html/index.html`. The homepage `/` and About page `/about-us/` are implemented. Runtime dependencies are Next.js, React and React DOM; TypeScript and Node/React type definitions are development dependencies; styling reuses the HTML homepage CSS and local Lato fonts.
 
 ## Run
 
@@ -69,3 +69,15 @@ Assign your menu under Appearance → Menus → Main Navigation. Saving the menu
 ## Not-found page
 
 `app/not-found.tsx` provides the full-screen ocean 404 with a warning icon and Return to Home link. It includes the shared CMS header, with a local logo fallback if CMS loading fails. The footer and funding banner remain hidden. The root layout supplies the shared background; the `(site)` route-group layout supplies header/footer/navigation for regular pages. Missing URLs return HTTP 404 and noindex. TypeScript, production build and HTTP checks passed, including HTTP 200 for the regular homepage after the layout extraction.
+
+## About page
+
+`app/(site)/[...slug]/page.tsx` follows the HTML About layout and resolves `/about-us/` through the CMS manifest. Its title, hero image/subtext and biography come from `page.title`, `acf.hero_section` and the rendered WordPress editor content. Missing hero images use a gray placeholder. AIOSEO metadata uses the same typed adapter as the homepage (`lib/metadata.ts`). Shared site layout/header/footer/navigation are reused, with no ESPA banner on About. Missing unpublished About pages use the custom 404.
+
+`lib/cms.ts` now exposes `getSiteData()` for shared options/navigation independently of homepage content and `getPageByPath()` for manifest-based page loading. Type checking, production build and HTTP checks passed for the About content, hero, SEO, navigation and shared layout; the homepage also remains HTTP 200.
+
+## Generic CMS page template
+
+`app/(site)/[...slug]/page.tsx` handles every non-homepage URL, including nested paths, by looking up the exact published page path in the CMS manifest. About is now an instance of this template; no About-specific route or page ID remains. The template uses the CMS page title, optional `hero_section`, editor HTML and AIOSEO metadata. Missing hero images use a gray placeholder. Saving/exporting another published CMS page makes its path available without adding a Next.js route or rebuilding. The homepage keeps its dedicated layout and ESPA banner.
+
+`app/(site)/not-found.tsx` supplies the shared-layout 404 content for unknown CMS paths. TypeScript checks and the production build passed; HTTP checks confirmed the About page returns 200 and unknown single/nested paths return 404.
