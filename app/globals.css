@@ -1189,3 +1189,16 @@ figcaption {
 @media (min-width: 901px) {
   .menu-item-heading .submenu-toggle { display: none; }
 }
+
+/* Load the YouTube player only after the visitor presses Play. */
+.youtube-video { aspect-ratio: 16 / 9; background: #00101c; position: relative; }
+.youtube-video iframe { width: 100%; height: 100%; }
+.youtube-preview { display: block; position: relative; width: 100%; height: 100%; padding: 0; border: 0; background: #00101c; color: #fff; overflow: hidden; }
+.youtube-preview > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.youtube-preview-title { position: absolute; top: 0; left: 0; right: 0; padding: 14px 18px 35px; background: linear-gradient(#000c, transparent); text-align: left; font-size: 16px; }
+.youtube-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 72px; height: 50px; border-radius: 12px; background: #b00000; color: #fff; transition: background-color 180ms ease; }
+.youtube-play svg { width: 30px; height: 30px; }
+.youtube-preview:hover .youtube-play,
+.youtube-preview:focus-visible .youtube-play { background: #e00000; }
+.youtube-preview:focus-visible { outline: 3px solid #07899d; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .youtube-play { transition: none; } }
