@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import type { CmsSite, MenuItem, RenderedImage, SocialLinks as SocialLinkData, SocialPlatform } from '../lib/types';
 import { imageProps } from '../lib/cms';
 import Navigation from './Navigation';
+import Link from 'next/link';
 
 function SocialLinks({ links }: { links?: SocialLinkData }) {
   const icons: Record<SocialPlatform, ReactNode> = {
@@ -19,7 +20,7 @@ export default function Header({ site, items }: { site: CmsSite; items: MenuItem
   return <>
     <a className="skip-link" href="#content">Skip to content</a>
     <header className="site-header" id="top">
-      <a className="brand" href="/" aria-label={`${site.name} home`}><img {...(imageProps(site.header_logo, site, site.name) || fallbackLogo)} /></a>
+      <Link className="brand" href="/" aria-label={`${site.name} home`}><img {...(imageProps(site.header_logo, site, site.name) || fallbackLogo)} /></Link>
       <Navigation items={items} />
       <SocialLinks links={site.social_links} />
     </header>

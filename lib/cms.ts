@@ -133,12 +133,13 @@ export const getNewsArchive = cache(async (pageNumber: number) => {
 
 export const getPostByPath = cache(async (pathname: string) => {
   const news = await getNewsIndex();
-  const entry = news.posts.find((post) => post.path.replace(/\/$/, '') === pathname.replace(/\/$/, ''));
-  if (!entry) return null;
+  const index = news.posts.findIndex((post) => post.path.replace(/\/$/, '') === pathname.replace(/\/$/, ''));
+  if (index < 0) return null;
+  const entry = news.posts[index];
   const siteData = await getSiteData();
   const page = await readJson<CmsPage>(entry.file);
   const canonical = new URL(entry.path, page.seo.canonical_url || siteData.site.frontend?.base_url || process.env.FRONTEND_BASE_URL).toString();
-  return { ...siteData, page: { ...page, seo: {
+  return { ...siteData, previous: news.posts[index + 1] || null, next: news.posts[index - 1] || null, page: { ...page, seo: {
     ...page.seo, canonical_path: entry.path, canonical_url: canonical,
     facebook: page.seo.facebook ? { ...page.seo.facebook, url: canonical,
       tags: { ...page.seo.facebook.tags, 'og:url': canonical } } : undefined,

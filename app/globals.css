@@ -257,6 +257,7 @@ main {
 }
 
 .hero {
+  background-color: #00101c;
   min-height: 600px;
   height: 600px;
   max-height: 600px;
@@ -1105,4 +1106,26 @@ figcaption {
     max-height: 400px;
   }
   .hero-copy { padding: 20px 22px; }
+}
+
+/* News article navigation and responsive video embeds. */
+.article-content { max-width: 940px; margin: auto; }
+.article-back { display: inline-block; margin-bottom: 35px; text-decoration: none; }
+.article-back:hover { text-decoration: underline; }
+.article-navigation { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 65px; padding-top: 30px; border-top: 1px solid #eee; }
+.article-navigation-link { display: flex; align-items: flex-start; gap: 20px; text-decoration: none; min-width: 0; }
+.article-navigation-link img { width: 75px; height: 75px; object-fit: cover; border-radius: 5px; flex-shrink: 0; }
+.article-navigation-label { display: block; color: #000; font-size: 14px; font-weight: 700; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 8px; }
+.article-navigation-title { display: block; font-size: 14px; line-height: 1.7; color: #505050; }
+.article-navigation-next { flex-direction: row-reverse; text-align: right; }
+.article-navigation-link:hover .article-navigation-title { text-decoration: underline; }
+.news-article .wp-block-embed:has(iframe[src*="youtube"]),
+.news-article .wp-block-embed:has(iframe[src*="youtu.be"]) { width: 100%; margin-left: 0; margin-right: 0; }
+.news-article iframe[src*="youtube.com/embed/"],
+.news-article iframe[src*="youtube-nocookie.com/embed/"],
+.news-article iframe[src*="youtu.be/"] { display: block; width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; }
+@media (max-width: 600px) {
+  .article-navigation { gap: 24px; margin-top: 45px; }
+  .article-navigation-link { flex-direction: column; gap: 12px; }
+  .article-navigation-next { align-items: flex-end; }
 }
