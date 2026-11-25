@@ -58,6 +58,7 @@ export interface TwitterSeo {
 }
 
 export interface PageSeo {
+  robots?: { index: boolean; follow: boolean };
   title?: string;
   description?: string;
   canonical_url?: string;
@@ -125,6 +126,7 @@ export interface CmsPage {
   id: number;
   title: string;
   is_homepage: boolean;
+  modified_at?: string;
   published_at?: string;
   featured_image?: MediaImage | null;
   seo: PageSeo;

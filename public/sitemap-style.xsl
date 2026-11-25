@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:s="http://www.sitemaps.org/schemas/sitemap/0.9">
+<xsl:output method="html" encoding="UTF-8" />
+<xsl:template match="/">
+<html lang="en"><head><title>Ulysses Sailing — XML Sitemap</title><meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>body{margin:0;background:#f2f7f8;color:#193c45;font:16px/1.6 system-ui,sans-serif}header{background:#053c48;color:#fff;padding:48px max(24px,calc((100vw - 1080px)/2))}header p{margin:0;color:#bfe5e8;font-size:12px;letter-spacing:3px}h1{font-size:36px;font-weight:500;margin:10px 0}header a{color:#fff}main{max-width:1080px;margin:35px auto;padding:0 24px}.summary{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px}.table-wrap{overflow-x:auto;border:1px solid #dce6e8;border-radius:12px;background:white}table{border-collapse:collapse;width:100%;text-align:left}th,td{padding:16px 22px;border-bottom:1px solid #e7eef0}th{background:#e9f2f3;font-size:12px;text-transform:uppercase;letter-spacing:1px}a{color:#075264;text-underline-offset:4px}td:first-child{color:#647d84}td a{overflow-wrap:anywhere}footer{font-size:14px;color:#526c74;margin-top:24px}@media(max-width:600px){header{padding:32px 24px}h1{font-size:28px}th,td{padding:12px}th:first-child,td:first-child{display:none}}</style>
+</head><body><header><p>ULYSSES SAILING</p><h1>XML Sitemap</h1><a href="/sitemap/">Explore the website sitemap ↗</a></header><main>
+<div class="summary"><span><strong><xsl:value-of select="count(s:sitemapindex/s:sitemap | s:urlset/s:url)" /></strong><xsl:choose><xsl:when test="s:sitemapindex"> sitemap files</xsl:when><xsl:otherwise> published URLs</xsl:otherwise></xsl:choose></span><a href="/">Return to homepage</a></div>
+<div class="table-wrap"><table><thead><tr><th>#</th><th>Location</th><th>Last updated</th></tr></thead><tbody><xsl:for-each select="s:sitemapindex/s:sitemap | s:urlset/s:url"><tr><td><xsl:value-of select="position()" /></td><td><a href="{s:loc}"><xsl:value-of select="s:loc" /></a></td><td><xsl:value-of select="substring(s:lastmod,1,10)" /></td></tr></xsl:for-each></tbody></table></div>
+<footer>This XML file helps search engines discover our published content. For a visual directory, visit <a href="/sitemap/">our website sitemap</a>.</footer>
+</main></body></html>
+</xsl:template></xsl:stylesheet>

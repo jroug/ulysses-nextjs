@@ -8,6 +8,7 @@ export function pageMetadata(site: CmsSite, page: CmsPage): Metadata {
   const twitter = seo.twitter;
   const article = facebook?.tags || {};
   return {
+    robots: seo.robots,
     title: seo.title || page.title, description: seo.description || undefined,
     alternates: { canonical: seo.canonical_url },
     icons: { icon: mediaUrl(site.icon?.url, site) || '/assets/images/shared/ulysses-sailing-favicon-192.png' },

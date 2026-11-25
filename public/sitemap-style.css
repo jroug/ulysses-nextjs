@@ -1,0 +1,57 @@
+/* Native XML styling for browsers without XSLT support. */
+:root {
+  display: block;
+  box-sizing: border-box;
+  max-width: 1120px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 40px 24px;
+  background: #f2f7f8;
+  color: #193c45;
+  font: 15px/1.6 system-ui, sans-serif;
+  counter-reset: sitemap-row;
+}
+:root::before {
+  display: block;
+  white-space: pre-line;
+  content: "ULYSSES SAILING\A XML Sitemap";
+  margin-bottom: 30px;
+  padding: 32px;
+  border-radius: 12px;
+  background: #053c48;
+  color: white;
+  font-size: 30px;
+  font-weight: 500;
+  line-height: 1.7;
+}
+sitemapindex::before { content: "ULYSSES SAILING\A Sitemap Index"; }
+:root::after {
+  display: block;
+  content: "These XML files help search engines discover our published content. Visit /sitemap/ for the interactive website directory.";
+  padding: 20px 0;
+  font-size: 13px;
+  color: #526c74;
+}
+sitemap, url {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) 250px;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding: 18px 24px;
+  border: 1px solid #dce6e8;
+  border-radius: 8px;
+  background: #fff;
+  counter-increment: sitemap-row;
+}
+sitemap::before, url::before { content: counter(sitemap-row, decimal-leading-zero); color: #647d84; font-size: 13px; }
+loc { display: block; grid-column: 2; color: #075264; overflow-wrap: anywhere; }
+lastmod { display: block; grid-column: 3; color: #526c74; font-size: 12px; white-space: nowrap; }
+lastmod::before { content: "Updated "; }
+priority, changefreq { display: none; }
+@media (max-width: 700px) {
+  :root { padding: 24px 16px; font-size: 14px; }
+  :root::before { padding: 24px; font-size: 25px; }
+  sitemap, url { grid-template-columns: 24px minmax(0, 1fr); gap: 8px; padding: 16px; }
+  lastmod { grid-column: 2; white-space: normal; }
+}

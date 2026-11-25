@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { CmsSite, RenderedImage } from '../lib/types';
 import { imageProps } from '../lib/cms';
 
@@ -9,5 +10,6 @@ export default function Footer({ site }: { site: CmsSite }) {
       <img {...(imageProps(site.footer_logo, site, site.name) || fallbackLogo)} loading="lazy" decoding="async" />
     </a>
     {site.copyright_text && <p>{site.copyright_text}</p>}
+    <Link className="footer-sitemap-link" href="/sitemap/">Sitemap</Link>
   </footer>;
 }

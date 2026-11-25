@@ -167,3 +167,31 @@ export const getLegacyPostRedirect = cache(async (pathname: string) => {
   const entry = news.posts.find((post) => post.wordpressPath.replace(/\/$/, '') === pathname.replace(/\/$/, ''));
   return entry && entry.path.replace(/\/$/, '') !== pathname.replace(/\/$/, '') ? entry.path : null;
 });
+
+/** Shared source for the human-readable sitemap and search-engine XML. */
+export const getSitemapData = cache(async () => {
+  const [index, news] = await Promise.all([getIndex(), getNewsIndex()]);
+  const baseUrl = (index.site.frontend?.base_url || process.env.FRONTEND_BASE_URL || '').replace(/\/$/, '');
+  if (!/^https?:\/\//.test(baseUrl)) throw new Error('A frontend base URL is required for the sitemap.');
+  const excluded = new Set(['/thank-you', '/landing-page', '/jpk-39-fc', '/pogo-36', '/x46', '/jpk-48-fc']);
+  const files = [
+    ...index.pages.map((entry) => ({ file: entry.file, path: entry.path, kind: 'page' as const })),
+    ...news.posts.map((entry) => ({ file: entry.file, path: entry.path, kind: 'post' as const })),
+  ];
+  const rows: { page: CmsPage; path: string; kind: 'page' | 'post' }[] = [];
+  // Keep simultaneous requests modest for shared WordPress hosting.
+  for (let offset = 0; offset < files.length; offset += 4) {
+    rows.push(...await Promise.all(files.slice(offset, offset + 4).map(async (entry) => ({
+      page: await readJson<CmsPage>(entry.file), path: entry.path, kind: entry.kind,
+    }))));
+  }
+  const seen = new Set<string>();
+  const entries = rows.filter(({ page, path }) => {
+    if (page.seo.robots?.index === false || excluded.has(path.replace(/\/$/, '')) || seen.has(path)) return false;
+    seen.add(path); return true;
+  }).map(({ page, path, kind }) => ({
+    title: page.title, path, kind, url: new URL(path, baseUrl).toString(),
+    modified: page.modified_at && Number.isFinite(Date.parse(page.modified_at)) ? page.modified_at : undefined,
+  }));
+  return { baseUrl, entries };
+});
