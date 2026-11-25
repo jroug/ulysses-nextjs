@@ -1134,3 +1134,58 @@ figcaption {
   .article-navigation-link { flex-direction: column; gap: 12px; }
   .article-navigation-next { align-items: flex-end; }
 }
+
+/* Fleet overview: CMS slider, optional body text, and two-column boat cards. */
+.fleet-section { padding: 55px 24px 80px; }
+.fleet-container { max-width: 940px; margin: auto; }
+.fleet-introduction { margin-bottom: 40px; }
+.fleet-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; }
+.fleet-card { display: flex; flex-direction: column; min-width: 0; padding-bottom: 25px; border-bottom: 1px solid #e1e8e9; }
+.fleet-image-link { display: block; }
+.fleet-image { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; }
+.fleet-copy { padding: 18px 0 24px; font-size: 14px; line-height: 1.8; }
+.fleet-copy h2 { margin: 0 0 12px; font-size: 27px; line-height: 1.25; font-weight: 300; }
+.fleet-copy p { margin-bottom: 18px; }
+.fleet-link { align-self: flex-start; margin-top: auto; }
+@media (max-width: 700px) {
+  .fleet-section { padding: 35px 24px 55px; }
+  .fleet-grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* Reusable individual yacht layout, following the HTML yacht template. */
+.yacht-introduction { padding-top: 65px; padding-bottom: 65px; text-align: center; }
+.yacht-video { max-width: 940px; margin: 0 auto 55px; padding: 0 24px; }
+.yacht-video iframe { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border: 0; }
+.yacht-video figure { margin: 0; }
+.yacht-detail-text { grid-template-columns: 1fr; min-height: 0; }
+.yacht-detail-text .split-copy { grid-column: 1; max-width: 940px; margin: auto; padding: 45px 24px; }
+.yacht-gallery-section { padding: 60px 24px 80px; text-align: center; }
+.yacht-gallery-section h2 { margin-bottom: 55px; }
+.yacht-gallery-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; max-width: 1000px; margin: auto; }
+.yacht-gallery-grid button { display: block; padding: 0; border: 0; background: transparent; min-width: 0; }
+.yacht-gallery-grid img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; }
+.yacht-gallery-grid button:hover img { opacity: .8; }
+.yacht-specifications .yacht-gallery-grid { display: flex; flex-wrap: wrap; justify-content: center; max-width: 1400px; gap: 25px; }
+.yacht-specifications .yacht-gallery-grid button { flex: 1 1 300px; max-width: 550px; }
+.yacht-specifications img { aspect-ratio: auto; height: 280px; object-fit: contain; }
+.yacht-lightbox { width: 94vw; max-width: 1400px; max-height: 94vh; padding: 45px 20px 15px; border: 0; background: #00101c; color: white; }
+.yacht-lightbox::backdrop { background: #000d; }
+.yacht-lightbox-content > img { display: block; width: 100%; height: auto; max-height: 72vh; object-fit: contain; }
+.yacht-lightbox button { color: white; border: 1px solid #ffffff80; background: #00101c; padding: 8px 14px; }
+.yacht-lightbox-close { position: absolute; top: 4px; right: 8px; font-size: 22px; line-height: 1; }
+.yacht-lightbox-controls { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 15px; }
+.yacht-lightbox-controls p { flex: 1; margin: 0; font-size: 14px; text-align: center; }
+@media (max-width: 700px) {
+  .yacht-introduction { padding-top: 40px; padding-bottom: 40px; }
+  .yacht-gallery-section { padding: 40px 24px; }
+  .yacht-gallery-section h2 { margin-bottom: 30px; }
+  .yacht-gallery-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .yacht-specifications .yacht-gallery-grid { flex-direction: column; align-items: center; }
+  .yacht-specifications .yacht-gallery-grid button { flex: none; width: 100%; }
+  .yacht-specifications img { height: auto; max-height: 330px; }
+}
+
+/* Desktop submenus open on hover or keyboard focus without an arrow. */
+@media (min-width: 901px) {
+  .menu-item-heading .submenu-toggle { display: none; }
+}

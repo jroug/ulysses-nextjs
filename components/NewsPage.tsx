@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import PageHero from './PageHero';
 import { notFound } from 'next/navigation';
 import { getNewsArchive, imageProps, richText } from '../lib/cms';
 import { pageMetadata } from '../lib/metadata';
@@ -23,15 +24,8 @@ export default async function NewsPage({ number = 1 }: { number?: number }) {
   const data = await getNewsArchive(number);
   if (!data) notFound();
   const { site, page, posts, totalPages } = data;
-  const hero = page.acf?.hero_section;
-  const image = imageProps(hero?.hero_image, site, 'Ulysses Sailing news');
   return <>
-    <section className="hero page-hero news-hero">
-      {image && <img className="hero-image" {...image} loading="eager" fetchPriority="high" sizes="93vw" />}
-      <div className="hero-copy"><h1>{page.title}</h1>
-        {hero?.hero_sub_text && <div dangerouslySetInnerHTML={{ __html: richText(hero.hero_sub_text, site) }} />}
-      </div>
-    </section>
+    <PageHero page={page} site={site} />
     <section className="news-section" style={{ backgroundColor: page.acf?.body_background_color || '#ffffff' }}>
       <div className="news-list">
         {page.content?.html && <div className="news-introduction" dangerouslySetInnerHTML={{ __html: richText(page.content.html, site) }} />}

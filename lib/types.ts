@@ -74,7 +74,19 @@ export interface Boat {
   button_link?: string | null;
 }
 
+export interface BoatDetails {
+  image?: MediaImage | null;
+  title?: string | null;
+  text?: string | null;
+}
+
 export interface CmsFields {
+  [key: `boat_details_${number}`]: BoatDetails | undefined;
+  video_section?: string | null;
+  specifications_title?: string | null;
+  specifications_gallery?: MediaImage[];
+  more_images_title?: string | null;
+  more_images_gallery?: MediaImage[];
   body_background_color?: string | null;
   hero_section?: { hero_image?: MediaImage | null; hero_sub_text?: string | null };
   top_slider_title?: string | null;

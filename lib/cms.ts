@@ -69,6 +69,7 @@ export function pageUrl(href: string | null | undefined): string {
   if (!href || href.startsWith('#')) return href || '/';
   const route = href.split(/[?#]/)[0].replace(/\/$/, '') || '/';
   if (route === '/' || route === 'index.html') return '/';
+  if (route === '/the-yachts' || route.startsWith('/the-yachts/')) return route + '/';
   if (route === '/news' || route === 'news.html') return '/news/';
   if (route === '/training-schedule' || route === 'training-schedule.html') return '/training-schedule/';
   const file = routes[route] || (Object.values(routes).includes(route) ? route : null);
