@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Sitemap | Ulysses Sailing', descript
 
 export default async function SitemapPage() {
   const { entries } = await getSitemapData();
-  const pages = entries.filter((entry) => entry.kind === 'page');
+  const pages = entries.filter((entry) => entry.kind === 'page' && entry.path.replace(/\/$/, '') !== '/stoicheia');
   const boats = pages.filter((entry) => entry.path.startsWith('/the-yachts/'));
   const news = entries.filter((entry) => entry.kind === 'post');
   const groups = [
