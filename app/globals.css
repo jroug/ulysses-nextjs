@@ -1202,3 +1202,32 @@ figcaption {
 .youtube-preview:focus-visible .youtube-play { background: #e00000; }
 .youtube-preview:focus-visible { outline: 3px solid #07899d; outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { .youtube-play { transition: none; } }
+
+/* ACF Dimensions Text supplies markup; presentation belongs to the frontend. */
+.yacht-dimensions-section { max-width: 940px; margin: auto; padding: 45px 24px; }
+.yacht-dimensions-section > h2 { text-align: center; margin: 0 0 35px; }
+.yacht-dimensions { width: 100%; font-family: inherit; color: #292929; }
+.yacht-dimensions h2 { font-size: 30px; font-weight: 700; margin: 0 0 20px; line-height: 1.3; }
+.yacht-dimensions .yacht-dimensions-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+.yacht-dimensions .yacht-dimensions-column { min-width: 0; }
+.yacht-dimensions .dimension-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 14px; font-size: 14px; line-height: 1.3; }
+.yacht-dimensions .dimension-row strong { font-weight: 700; flex-shrink: 0; }
+.yacht-dimensions .dimension-row > span:last-child:not(.dimension-dots) { text-align: right; flex-shrink: 0; }
+.yacht-dimensions .dimension-dots { flex: 1; min-width: 8px; border-bottom: 2px dotted #dedede; transform: translateY(-3px); }
+.yacht-dimensions .dimension-description { font-size: 14px; line-height: 1.4; margin: 0 0 22px; }
+.yacht-dimensions .dimension-draft { margin-bottom: 12px; }
+@media (max-width: 1024px) {
+  .yacht-dimensions .yacht-dimensions-grid { gap: 24px; }
+  .yacht-dimensions .dimension-row { gap: 6px; font-size: 13px; }
+}
+@media (max-width: 767px) {
+  .yacht-dimensions h2 { font-size: 26px; margin-bottom: 20px; }
+  .yacht-dimensions .yacht-dimensions-grid { grid-template-columns: 1fr; gap: 20px; }
+  .yacht-dimensions .dimension-row { font-size: 14px; gap: 8px; margin-bottom: 14px; }
+  .yacht-dimensions .dimension-description { font-size: 14px; }
+}
+@media (max-width: 380px) {
+  .yacht-dimensions .dimension-row { font-size: 12px; gap: 5px; }
+  .yacht-dimensions .dimension-row strong,
+  .yacht-dimensions .dimension-row > span:last-child:not(.dimension-dots) { flex-shrink: 1; }
+}

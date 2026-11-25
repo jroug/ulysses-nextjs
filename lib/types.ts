@@ -83,6 +83,8 @@ export interface BoatDetails {
 export interface CmsFields {
   [key: `boat_details_${number}`]: BoatDetails | undefined;
   video_section?: string | null;
+  dimensions_title?: string | null;
+  dimensions_text?: string | null;
   specifications_title?: string | null;
   specifications_gallery?: MediaImage[];
   more_images_title?: string | null;

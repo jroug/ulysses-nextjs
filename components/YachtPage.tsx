@@ -32,6 +32,10 @@ export default function YachtPage({ page, site }: { page: CmsPage; site: CmsSite
         </section>;
       })}
       <YachtGallery title={fields.specifications_title || 'Specifications'} images={gallery(fields.specifications_gallery, 'specifications')} specifications />
+      {fields.dimensions_text && <section className="yacht-dimensions-section">
+        {fields.dimensions_title && <h2>{fields.dimensions_title}</h2>}
+        <div dangerouslySetInnerHTML={{ __html: yachtText(fields.dimensions_text, site, `${page.title} dimensions`) }} />
+      </section>}
       <YachtGallery title={fields.more_images_title || 'More Images'} images={gallery(fields.more_images_gallery, 'gallery image')} />
     </div>
   </>;

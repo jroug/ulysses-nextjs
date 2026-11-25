@@ -4,7 +4,7 @@ import type { RenderedImage } from '../../lib/types';
 import PageHero from '../../components/PageHero';
 import EspaBanner from '../../components/EspaBanner';
 import { getHomepage, imageProps, richText, mediaUrl } from '../../lib/cms';
-
+import Link from 'next/link';
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,7 +30,7 @@ export default async function Homepage() {
         <img {...(imageProps(boat.boat_image, site, `${boat.button_text?.replace(/^Explore\s+/i, '') || 'Performance yacht'} sailing`) || boatPlaceholder)} loading="lazy" decoding="async" sizes="(max-width:600px) 92vw, 47vw" />
       </div>
       <div className="split-copy"><div dangerouslySetInnerHTML={{ __html: richText(boat.boat_text, site) }} />
-        {boat.button_text && boat.button_link && <a className="button" href={boat.button_link}>{boat.button_text}</a>}
+        {boat.button_text && boat.button_link && <Link className="button" href={boat.button_link}>{boat.button_text}</Link>}
       </div>
     </section>)}
     {fields.text_section_2 && <section className="contact-cta narrow" dangerouslySetInnerHTML={{ __html: richText(fields.text_section_2, site, { preserveLinks: true }) }} />}
