@@ -1,5 +1,5 @@
 import { cache } from 'react';
-import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage, MenuItem, NavigationData } from './types';
+import type { CmsIndex, CmsPage, CmsSite, HomepageData, MediaImage, RenderedImage, MenuItem, NavigationData, NewsIndex } from './types';
 
 // All environments use the public CMS JSON URLs, with fresh data on each request.
 async function readJson<T>(file: string): Promise<T> {
@@ -55,11 +55,13 @@ const routes: Record<string, string> = {
   '/pricelist': 'pricelist.html', '/news': 'news.html', '/about-us': 'about-us.html', '/contact': 'contact.html',
 };
 
-// Only the homepage exists in Next.js; other links use the existing public website.
+// Dedicated Next.js pages stay local; remaining links can use the HTML website.
 export function pageUrl(href: string | null | undefined): string {
   if (!href || href.startsWith('#')) return href || '/';
   const route = href.split(/[?#]/)[0].replace(/\/$/, '') || '/';
   if (route === '/' || route === 'index.html') return '/';
+  if (route === '/news' || route === 'news.html') return '/news/';
+  if (route === '/training-schedule' || route === 'training-schedule.html') return '/training-schedule/';
   const file = routes[route] || (Object.values(routes).includes(route) ? route : null);
   if (!file) return href;
   if (process.env.HTML_BASE_URL) return `${process.env.HTML_BASE_URL.replace(/\/$/, '')}/${file}`;
@@ -73,6 +75,10 @@ export function pageUrl(href: string | null | undefined): string {
 
 export function richText(html: string | null | undefined, site: CmsSite, { preserveLinks = false }: { preserveLinks?: boolean } = {}): string {
   return (html || '')
+    .replace(/srcset=(['"])(.*?)\1/g, (_match, quote: string, value: string) => `srcset=${quote}${value.split(',').map((part) => {
+      const [url, size] = part.trim().split(/\s+/);
+      return [mediaUrl(url, site), size].filter(Boolean).join(' ');
+    }).join(', ')}${quote}`)
     .replace(/(src|href)=(['"])(.*?)\2/g, (match: string, key: string, quote: string, value: string) => {
       if (key === 'href' && preserveLinks) return match;
       let url = mediaUrl(value, site);
@@ -107,3 +113,42 @@ function frontendMenuItem(item: MenuItem, site: CmsSite): MenuItem {
   }
   return { ...item, url, children: item.children.map((child) => frontendMenuItem(child, site)) };
 }
+
+const getNewsIndex = cache(async () => {
+  const news = await readJson<NewsIndex>('news.json');
+  return { ...news, posts: news.posts.map((post) => ({
+    ...post, wordpressPath: post.path, path: `/news/${post.slug}/`,
+  })) };
+});
+
+export const getNewsArchive = cache(async (pageNumber: number) => {
+  const data = await getPageByPath('/news/');
+  if (!data) return null;
+  const news = await getNewsIndex();
+  const perPage = Math.max(1, news.posts_per_page);
+  const totalPages = Math.max(1, Math.ceil(news.posts.length / perPage));
+  if (!Number.isSafeInteger(pageNumber) || pageNumber < 1 || pageNumber > totalPages) return null;
+  return { ...data, totalPages, pageNumber, posts: news.posts.slice((pageNumber - 1) * perPage, pageNumber * perPage) };
+});
+
+export const getPostByPath = cache(async (pathname: string) => {
+  const news = await getNewsIndex();
+  const entry = news.posts.find((post) => post.path.replace(/\/$/, '') === pathname.replace(/\/$/, ''));
+  if (!entry) return null;
+  const siteData = await getSiteData();
+  const page = await readJson<CmsPage>(entry.file);
+  const canonical = new URL(entry.path, page.seo.canonical_url || siteData.site.frontend?.base_url || process.env.FRONTEND_BASE_URL).toString();
+  return { ...siteData, page: { ...page, seo: {
+    ...page.seo, canonical_path: entry.path, canonical_url: canonical,
+    facebook: page.seo.facebook ? { ...page.seo.facebook, url: canonical,
+      tags: { ...page.seo.facebook.tags, 'og:url': canonical } } : undefined,
+    twitter: page.seo.twitter ? { ...page.seo.twitter,
+      tags: { ...page.seo.twitter.tags, 'twitter:url': canonical } } : undefined,
+  } } };
+});
+
+export const getLegacyPostRedirect = cache(async (pathname: string) => {
+  const news = await getNewsIndex();
+  const entry = news.posts.find((post) => post.wordpressPath.replace(/\/$/, '') === pathname.replace(/\/$/, ''));
+  return entry && entry.path.replace(/\/$/, '') !== pathname.replace(/\/$/, '') ? entry.path : null;
+});

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { MenuItem } from '../lib/types';
 
@@ -18,7 +19,7 @@ function MenuBranch({ item, pathname, mobileOpen }: { item: MenuItem; pathname: 
     onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setExpanded(false); }}
     onKeyDown={(event) => { if (event.key === 'Escape' && active) { event.stopPropagation(); setExpanded(false); event.currentTarget.querySelector('button')?.focus(); } }}>
     <div className="menu-item-heading">
-      <a href={item.url || '#'} target={item.target || undefined} rel={rel} aria-current={current ? 'page' : undefined}>{item.title}</a>
+      <Link href={item.url || '#'} target={item.target || undefined} rel={rel} aria-current={current ? 'page' : undefined}>{item.title}</Link>
       {hasChildren && <button className="submenu-toggle" type="button" aria-label={`Toggle ${item.title} submenu`} aria-expanded={active} aria-controls={submenuId} onClick={() => setExpanded(!expanded)}><span aria-hidden="true">▾</span></button>}
     </div>
     {hasChildren && <ul className="submenu" id={submenuId}>

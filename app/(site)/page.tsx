@@ -19,10 +19,10 @@ export default async function Homepage() {
   const { site, page } = await getHomepage();
   const fields = page.acf || {};
   const boats = fields.boat_repeater || [];
-  const slides = (fields.home_slider || []).map((image) => imageProps(image, site, 'Sailing in Greece')).filter((image): image is RenderedImage => image !== null);
+  const slides = (fields.top_slider_images || []).map((image) => imageProps(image, site, 'Sailing in Greece')).filter((image): image is RenderedImage => image !== null);
   
   return <>
-    <Slideshow images={slides} title={fields.home_slider_title} subtitle={fields.home_slider_sub_title} />
+    <Slideshow images={slides} title={fields.top_slider_title} subtitle={fields.top_slider_sub_text} />
     <img className="yacht-award" src="/assets/images/home/european-yacht-of-the-year-2022-award-383.webp" alt="European Yacht of the Year 2022" width="383" height="561" />
     {fields.text_section_1 && <section className="intro" dangerouslySetInnerHTML={{ __html: richText(fields.text_section_1, site) }} />}
     {boats.map((boat, index) => <section className={`split${index % 2 ? ' reverse' : ''}`} key={`${index}-${boat.button_link}`}>

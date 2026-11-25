@@ -77,9 +77,15 @@ export interface Boat {
 export interface CmsFields {
   body_background_color?: string | null;
   hero_section?: { hero_image?: MediaImage | null; hero_sub_text?: string | null };
-  home_slider_title?: string | null;
-  home_slider_sub_title?: string | null;
-  home_slider?: MediaImage[];
+  top_slider_title?: string | null;
+  top_slider_sub_text?: string | null;
+  top_slider_images?: MediaImage[];
+  tab_label_1?: string | null;
+  tab_text_1?: string | null;
+  tab_label_2?: string | null;
+  tab_text_2?: string | null;
+  tab_label_3?: string | null;
+  tab_text_3?: string | null;
   boat_repeater?: Boat[];
   text_section_1?: string | null;
   text_section_2?: string | null;
@@ -103,6 +109,8 @@ export interface CmsPage {
   id: number;
   title: string;
   is_homepage: boolean;
+  published_at?: string;
+  featured_image?: MediaImage | null;
   seo: PageSeo;
   acf?: CmsFields;
   content?: { html: string; raw: string };
@@ -138,4 +146,21 @@ export interface NavigationData {
   location: string;
   menu: { id: number; name: string; slug: string } | null;
   items: MenuItem[];
+}
+
+export interface NewsPostSummary {
+  id: number;
+  slug: string;
+  path: string;
+  title: string;
+  excerpt: string;
+  published_at: string;
+  featured_image?: MediaImage | null;
+  file: string;
+}
+
+export interface NewsIndex {
+  posts_per_page: number;
+  total: number;
+  posts: NewsPostSummary[];
 }
