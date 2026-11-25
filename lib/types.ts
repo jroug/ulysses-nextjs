@@ -116,6 +116,7 @@ export interface CmsSite {
   icon?: MediaImage | null;
   copyright_text?: string;
   espa_pdf_url?: string;
+  contact?: { email?: string; secondary_email?: string; phone?: string; address?: string };
   social_links?: SocialLinks;
   frontend?: { base_url: string; domain_name: string };
 }

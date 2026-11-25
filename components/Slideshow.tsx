@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { RenderedImage } from '../lib/types';
 
-interface SlideshowProps { images: RenderedImage[]; title?: string | null; subtitle?: string | null; }
+interface SlideshowProps { images: RenderedImage[]; title?: string | null; subtitle?: string | null; children?: ReactNode; }
 
-export default function Slideshow({ images, title, subtitle }: SlideshowProps) {
+export default function Slideshow({ images, title, subtitle, children }: SlideshowProps) {
   const hero = useRef<HTMLElement>(null);
   const [playing, setPlaying] = useState(false);
   const [started, setStarted] = useState(false);
@@ -53,7 +54,7 @@ export default function Slideshow({ images, title, subtitle }: SlideshowProps) {
         sizes="93vw" fetchPriority={index === 0 ? 'high' : 'low'} decoding="async"
         onTransitionEnd={() => { if (index === previous) setPrevious(null); }} />)}
     </div>
-    <div className="hero-copy"><h1>{title}</h1><p>{subtitle}</p></div>
+    <div className="hero-copy"><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}{children}</div>
     {images.length > 1 && <button type="button" className="slideshow-pause" aria-label={playing ? 'Pause slideshow' : 'Play slideshow'} aria-pressed={!playing}
       onClick={() => { setStarted(true); setPlaying((value) => !value); }}>{playing ? 'Pause' : 'Play'}</button>}
   </section>;

@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
       source: '/jpk-48-fc',
       destination: '/the-yachts/jpk-48-fc/',
       statusCode: 301,
+    }, {
+      source: '/landing-page',
+      destination: '/book-now/',
+      statusCode: 301,
     }];
   },
 };

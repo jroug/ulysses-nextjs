@@ -47,10 +47,12 @@ export function mediaUrl(url: string | null | undefined, site: CmsSite): string 
   const resolved = source && target && (url === source || url.startsWith(source + '/')) ? target + url.slice(source.length) : url;
   const mediaBase = process.env.MEDIA_BASE_URL?.replace(/\/$/, '');
   if (!mediaBase) return resolved;
-  // Only CMS uploads use the public media hostname; external images stay unchanged.
-  for (const base of [source, target]) {
-    const prefix = base ? `${base}/wp-content/uploads/` : '';
-    if (prefix && resolved.startsWith(prefix)) return `${mediaBase}/${resolved.slice(prefix.length)}`;
+  // Include local uploads retained in content after migrating WordPress to live.
+  // Local development returns above because MEDIA_BASE_URL is empty there.
+  const uploadPrefixes = [source, target].filter(Boolean).map((base) => `${base}/wp-content/uploads/`);
+  uploadPrefixes.push('http://localhost/GitHub/ulysses/headless-cms/wp-content/uploads/');
+  for (const prefix of uploadPrefixes) {
+    if (resolved.startsWith(prefix)) return `${mediaBase}/${resolved.slice(prefix.length)}`;
   }
   if (resolved.startsWith('/wp-content/uploads/')) return `${mediaBase}/${resolved.slice('/wp-content/uploads/'.length)}`;
   return resolved;
@@ -71,6 +73,8 @@ export function pageUrl(href: string | null | undefined): string {
   if (route === '/' || route === 'index.html') return '/';
   if (route === '/the-yachts' || route.startsWith('/the-yachts/')) return route + '/';
   if (route === '/news' || route === 'news.html') return '/news/';
+  if (route === '/contact' || route === 'contact.html') return '/contact/';
+  if (route === '/book-now' || route === '/landing-page') return '/book-now/';
   if (route === '/training-schedule' || route === 'training-schedule.html') return '/training-schedule/';
   const file = routes[route] || (Object.values(routes).includes(route) ? route : null);
   if (!file) return href;

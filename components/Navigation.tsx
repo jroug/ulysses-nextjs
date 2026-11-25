@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { MenuItem } from '../lib/types';
 
-function MenuBranch({ item, pathname, mobileOpen }: { item: MenuItem; pathname: string; mobileOpen: boolean }) {
+function MenuBranch({ item, pathname, mobileOpen, booking = false }: { item: MenuItem; pathname: string; mobileOpen: boolean; booking?: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const hasChildren = item.children.length > 0;
   const submenuId = `menu-children-${item.id}`;
@@ -13,13 +13,13 @@ function MenuBranch({ item, pathname, mobileOpen }: { item: MenuItem; pathname: 
   const active = expanded && mobileOpen;
   const rel = [item.rel, item.target === '_blank' ? 'noopener noreferrer' : ''].filter(Boolean).join(' ') || undefined;
 
-  return <li className={[hasChildren ? 'has-submenu' : '', active ? 'is-open' : '', ...item.classes].filter(Boolean).join(' ')}
+  return <li className={[hasChildren ? 'has-submenu' : '', active ? 'is-open' : '', booking ? 'header-book-now-item' : '', ...item.classes].filter(Boolean).join(' ')}
     onMouseEnter={() => { if (window.matchMedia('(min-width: 901px)').matches) setExpanded(true); }}
     onMouseLeave={() => { if (window.matchMedia('(min-width: 901px)').matches) setExpanded(false); }}
     onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setExpanded(false); }}
     onKeyDown={(event) => { if (event.key === 'Escape' && active) { event.stopPropagation(); setExpanded(false); event.currentTarget.querySelector('button')?.focus(); } }}>
     <div className="menu-item-heading">
-      <Link href={item.url || '#'} target={item.target || undefined} rel={rel} aria-current={current ? 'page' : undefined}>{item.title}</Link>
+      <Link className={booking ? 'header-book-now' : undefined} href={item.url || '#'} target={item.target || undefined} rel={rel} aria-current={current ? 'page' : undefined}>{item.title}</Link>
       {hasChildren && <button className="submenu-toggle" type="button" aria-label={`Toggle ${item.title} submenu`} aria-expanded={active} aria-controls={submenuId} onClick={() => setExpanded(!expanded)}><span aria-hidden="true">▾</span></button>}
     </div>
     {hasChildren && <ul className="submenu" id={submenuId}>
@@ -49,13 +49,15 @@ export default function Navigation({ items }: { items: MenuItem[] }) {
   }, []);
   useEffect(() => { setOpen(false); }, [pathname]);
   if (!items.length) return null;
+  const bookingItem = items.find((item) => item.url.split(/[?#]/)[0].replace(/\/$/, '') === '/book-now');
+  const orderedItems = bookingItem ? [...items.filter((item) => item.id !== bookingItem.id), bookingItem] : items;
   return <div ref={container} className="navigation-wrap">
     <button ref={toggle} className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-menu" onClick={() => setOpen(!open)}>Menu <span aria-hidden="true">☰</span></button>
-    <nav className={`main-nav${open ? ' is-open' : ''}`} id="main-menu" aria-label="Main navigation"
+    <nav className={`main-nav${open ? ' is-open' : ''}${bookingItem ? ' has-booking-button' : ''}`} id="main-menu" aria-label="Main navigation"
       onClick={(event) => {
         if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
       }}>
-      <ul>{items.map((item) => <MenuBranch key={item.id} item={item} pathname={pathname} mobileOpen={desktop || open} />)}</ul>
+      <ul>{orderedItems.map((item) => <MenuBranch key={item.id} item={item} pathname={pathname} mobileOpen={desktop || open} booking={item.id === bookingItem?.id} />)}</ul>
     </nav>
   </div>;
 }

@@ -1231,3 +1231,97 @@ figcaption {
   .yacht-dimensions .dimension-row strong,
   .yacht-dimensions .dimension-row > span:last-child:not(.dimension-dots) { flex-shrink: 1; }
 }
+
+/* Contact visual demo, following the HTML template. */
+.contact-page { padding: 55px 24px 65px; }
+.contact-details { text-align: center; margin: 0 auto 55px; }
+.contact-body { max-width: 940px; margin: 0 auto 45px; }
+.contact-form { max-width: 940px; }
+.contact-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 25px 18px; text-align: left; }
+.contact-form label { min-width: 0; }
+.contact-form input,
+.contact-form textarea { margin-top: 8px; }
+.contact-form-full { grid-column: 1 / -1; }
+.contact-send { min-width: 150px; margin-top: 40px; background: #000; color: #fff; border-color: #000; }
+.contact-preview-note,
+.contact-form-status { font-size: 14px; margin-top: 14px; color: #505050; }
+@media (max-width: 600px) {
+  .contact-page { padding: 40px 24px; }
+  .contact-details { margin-bottom: 35px; }
+  .contact-form-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+
+.contact-details p { margin: 0; }
+.contact-address { white-space: pre-line; }
+
+.thank-you-page { min-height: 500px; padding: 90px 24px; text-align: center; }
+.thank-you-icon { display: block; width: 64px; height: 64px; margin: 0 auto 25px; color: #075264; }
+.thank-you-page h1 { margin: 0 0 20px; }
+.thank-you-page .button { margin-top: 24px; }
+@media (max-width: 600px) { .thank-you-page { min-height: 400px; padding: 60px 24px; } }
+
+/* Book Now follows the original landing page, using the shared contact form. */
+.book-now-details { margin-top: 45px; font-size: 16px; line-height: 1.8; }
+.book-now-details p { margin: 0 auto; }
+.book-now-details a { color: inherit; }
+.book-now-content { padding: 65px 24px 70px; }
+.book-now-introduction { max-width: 940px; margin: 0 auto; text-align: center; font-size: 18px; line-height: 1.8; }
+.book-now-introduction p:empty { display: none; }
+.book-now-call { text-align: center; margin: 35px auto 65px; }
+.book-now-content > .contact-form { margin-top: 55px; }
+.book-now-call + .contact-form { margin-top: 0; }
+@media (max-width: 600px) {
+  .book-now-details { margin-top: 28px; font-size: 14px; }
+  .book-now-content { padding: 40px 24px 50px; }
+  .book-now-introduction { font-size: 16px; }
+  .book-now-call { margin: 28px auto 40px; }
+}
+
+.book-now-call-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 210px;
+  padding: 17px 32px;
+  background: #075264;
+  border-color: #075264;
+  color: #fff;
+  font-size: 14px;
+  box-shadow: 0 5px 14px #07526426;
+  transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+.book-now-call-button svg { width: 20px; height: 20px; flex-shrink: 0; }
+.book-now-call-button:hover { background: #043b49; border-color: #043b49; box-shadow: 0 7px 18px #07526438; }
+@media (prefers-reduced-motion: reduce) { .book-now-call-button { transition: none; } }
+
+.book-now-contact-details { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; max-width: 940px; margin: -25px auto 55px; padding: 28px; background: #f3f8f9; border: 1px solid #e1e8e9; border-radius: 4px; text-align: center; }
+.book-now-contact-details h2 { font-size: 13px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin: 0 0 12px; color: #075264; }
+.book-now-contact-details a { display: block; color: #075264; overflow-wrap: anywhere; }
+.book-now-contact-details p { margin: 0; }
+@media (max-width: 700px) {
+  .book-now-contact-details { grid-template-columns: 1fr; margin: 0 auto 40px; padding: 24px; }
+}
+
+/* The Book Now WordPress menu item becomes the header call to action. */
+.main-nav .header-book-now { display: inline-flex; align-items: center; justify-content: center; padding: 12px 22px; border: 1px solid #ffffff80; background: #075264; color: #fff; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; white-space: nowrap; box-shadow: 0 3px 12px #00101c26; transition: background-color 180ms ease, border-color 180ms ease; }
+.main-nav .header-book-now:hover,
+.main-nav .header-book-now:focus-visible,
+.main-nav .header-book-now[aria-current='page'] { background: #043b49; border-color: #fff; color: #fff; }
+@media (min-width: 901px) {
+  .main-nav.has-booking-button { flex: 1; min-width: 0; }
+  .main-nav.has-booking-button > ul { width: 100%; }
+  .main-nav.has-booking-button > ul > li:first-child:not(.header-book-now-item) { margin-left: auto; }
+  .header-book-now-item { margin-left: auto; padding-left: 24px; }
+}
+@media (min-width: 901px) and (max-width: 1350px) {
+  .main-nav.has-booking-button > ul { gap: 16px; }
+  .header-book-now-item { padding-left: 8px; }
+  .main-nav .header-book-now { padding: 11px 16px; }
+}
+@media (max-width: 900px) {
+  .header-book-now-item { margin-top: 18px; padding-top: 18px; border-top: 1px solid #ffffff30; }
+  .header-book-now-item .menu-item-heading { display: block; }
+  .main-nav .header-book-now { display: flex; width: 100%; padding: 14px 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .main-nav .header-book-now { transition: none; } }
