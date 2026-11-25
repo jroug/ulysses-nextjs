@@ -44,7 +44,16 @@ export function mediaUrl(url: string | null | undefined, site: CmsSite): string 
   if (!url) return '';
   const source = site.wordpress_url?.replace(/\/$/, '');
   const target = process.env.CMS_BASE_URL?.replace(/\/$/, '');
-  return source && target && (url === source || url.startsWith(source + '/')) ? target + url.slice(source.length) : url;
+  const resolved = source && target && (url === source || url.startsWith(source + '/')) ? target + url.slice(source.length) : url;
+  const mediaBase = process.env.MEDIA_BASE_URL?.replace(/\/$/, '');
+  if (!mediaBase) return resolved;
+  // Only CMS uploads use the public media hostname; external images stay unchanged.
+  for (const base of [source, target]) {
+    const prefix = base ? `${base}/wp-content/uploads/` : '';
+    if (prefix && resolved.startsWith(prefix)) return `${mediaBase}/${resolved.slice(prefix.length)}`;
+  }
+  if (resolved.startsWith('/wp-content/uploads/')) return `${mediaBase}/${resolved.slice('/wp-content/uploads/'.length)}`;
+  return resolved;
 }
 
 const routes: Record<string, string> = {
@@ -80,8 +89,8 @@ export function richText(html: string | null | undefined, site: CmsSite, { prese
       return [mediaUrl(url, site), size].filter(Boolean).join(' ');
     }).join(', ')}${quote}`)
     .replace(/(src|href)=(['"])(.*?)\2/g, (match: string, key: string, quote: string, value: string) => {
-      if (key === 'href' && preserveLinks) return match;
       let url = mediaUrl(value, site);
+      if (key === 'href' && preserveLinks) return `${key}=${quote}${url}${quote}`;
       // The CMS currently embeds the QR image using its former HTML asset URL.
       if (/\/assets\/images\/(?:home\/)?ulysses-sailing-esim-qr-code\.(png|webp)$/.test(url)) url = '/assets/images/home/ulysses-sailing-esim-qr-code.webp';
       if (key === 'href') url = pageUrl(url);

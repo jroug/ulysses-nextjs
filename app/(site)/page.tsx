@@ -3,7 +3,7 @@ import { pageMetadata } from '../../lib/metadata';
 import type { RenderedImage } from '../../lib/types';
 import Slideshow from '../../components/Slideshow';
 import EspaBanner from '../../components/EspaBanner';
-import { getHomepage, imageProps, richText } from '../../lib/cms';
+import { getHomepage, imageProps, richText, mediaUrl } from '../../lib/cms';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,6 +36,6 @@ export default async function Homepage() {
     {fields.text_section_2 && <section className="contact-cta narrow" dangerouslySetInnerHTML={{ __html: richText(fields.text_section_2, site, { preserveLinks: true }) }} />}
     {fields.html_widget && <section className="testimonials" dangerouslySetInnerHTML={{ __html: richText(fields.html_widget, site) }} />}
     {fields.text_section_3 && <section className="esim narrow" dangerouslySetInnerHTML={{ __html: richText(fields.text_section_3, site) }} />}
-    <EspaBanner />
+    <EspaBanner pdfUrl={site.espa_pdf_url === undefined ? undefined : mediaUrl(site.espa_pdf_url, site)} />
   </>;
 }

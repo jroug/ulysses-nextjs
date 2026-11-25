@@ -101,6 +101,7 @@ export interface CmsSite {
   footer_logo?: MediaImage | null;
   icon?: MediaImage | null;
   copyright_text?: string;
+  espa_pdf_url?: string;
   social_links?: SocialLinks;
   frontend?: { base_url: string; domain_name: string };
 }
