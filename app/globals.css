@@ -122,6 +122,11 @@ p {
   display: none !important
 }
 
+.skip-link {
+  color: #00101c;
+  background-color: #ffffff;
+}
+
 .skip-link:not(:focus) {
   position: absolute;
   width: 1px;
