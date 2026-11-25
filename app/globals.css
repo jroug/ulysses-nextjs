@@ -1096,3 +1096,13 @@ figcaption {
   .news-list { padding: 35px 24px; }
   .news-item { grid-template-columns: 1fr; gap: 24px; padding-bottom: 32px; margin-bottom: 32px; }
 }
+
+/* Compact heroes on mobile; desktop remains 600px tall. */
+@media (max-width: 600px) {
+  .hero {
+    min-height: 400px;
+    height: 400px;
+    max-height: 400px;
+  }
+  .hero-copy { padding: 20px 22px; }
+}

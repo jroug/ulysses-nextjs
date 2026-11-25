@@ -47,10 +47,14 @@ export default function Navigation({ items }: { items: MenuItem[] }) {
     document.addEventListener('click', close); document.addEventListener('keydown', close);
     return () => { media.removeEventListener('change', update); document.removeEventListener('click', close); document.removeEventListener('keydown', close); };
   }, []);
+  useEffect(() => { setOpen(false); }, [pathname]);
   if (!items.length) return null;
   return <div ref={container} className="navigation-wrap">
     <button ref={toggle} className="menu-toggle" type="button" aria-expanded={open} aria-controls="main-menu" onClick={() => setOpen(!open)}>Menu <span aria-hidden="true">☰</span></button>
-    <nav className={`main-nav${open ? ' is-open' : ''}`} id="main-menu" aria-label="Main navigation">
+    <nav className={`main-nav${open ? ' is-open' : ''}`} id="main-menu" aria-label="Main navigation"
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest('a')) setOpen(false);
+      }}>
       <ul>{items.map((item) => <MenuBranch key={item.id} item={item} pathname={pathname} mobileOpen={desktop || open} />)}</ul>
     </nav>
   </div>;
