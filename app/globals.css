@@ -1335,7 +1335,7 @@ figcaption {
 .sitemap-stats { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; margin-top: 28px; font-size: 14px; color: #075264; }
 .sitemap-stats strong { font-size: 24px; margin-right: 5px; }
 .sitemap-stats a { margin-left: auto; }
-.sitemap-groups { max-width: 1120px; margin: auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 24px; }
+.sitemap-groups { max-width: 1120px; margin: auto; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 24px; }
 .sitemap-card { background: #fff; border: 1px solid #dce7e9; border-radius: 12px; padding: 28px; }
 .sitemap-card-heading { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .sitemap-card-heading h2 { font-size: 25px; color: #053c48; margin: 0; }
@@ -1346,7 +1346,7 @@ figcaption {
 .sitemap-card li > a { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; color: #075264; text-decoration: none; }
 .sitemap-card li > a:hover { text-decoration: underline; }
 .sitemap-card time { display: block; font-size: 12px; color: #526c74; margin-top: 4px; }
-@media (max-width: 1000px) { .sitemap-groups { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .sitemap-groups { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .sitemap-page { padding: 40px 22px; } .sitemap-card { padding: 22px; } .sitemap-stats { gap: 16px; } .sitemap-stats a { margin-left: 0; } }
 
 .footer-sitemap-link { margin-top: 18px; color: #fff; font-size: 13px; letter-spacing: .5px; text-underline-offset: 4px; }
