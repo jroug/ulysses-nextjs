@@ -193,5 +193,23 @@ export const getSitemapData = cache(async () => {
     title: page.title, path, kind, url: new URL(path, baseUrl).toString(),
     modified: page.modified_at && Number.isFinite(Date.parse(page.modified_at)) ? page.modified_at : undefined,
   }));
-  return { baseUrl, entries };
+  const tagEntries = (news.tags || []).filter((tag) => news.posts.some((post) => post.tags?.some((item) => item.id === tag.id)))
+    .filter((tag) => !seen.has(tag.path))
+    .map((tag) => ({ title: tag.name, path: tag.path, kind: 'tag' as const,
+      url: new URL(tag.path, baseUrl).toString(), modified: undefined as string | undefined,
+    }));
+  return { baseUrl, entries: [...entries, ...tagEntries] };
+});
+
+export const getTagArchive = cache(async (slug: string, pageNumber = 1) => {
+  const [data, news] = await Promise.all([getPageByPath('/news/'), getNewsIndex()]);
+  if (!data) return null;
+  const normalize = (value: string) => { try { return decodeURIComponent(value); } catch { return value; } };
+  const tag = news.tags?.find((tag) => normalize(tag.slug) === normalize(slug));
+  if (!tag) return null;
+  const matching = news.posts.filter((post) => post.tags?.some((item) => item.id === tag.id));
+  const perPage = Math.max(1, news.posts_per_page);
+  const totalPages = Math.max(1, Math.ceil(matching.length / perPage));
+  if (!matching.length || !Number.isSafeInteger(pageNumber) || pageNumber < 1 || pageNumber > totalPages) return null;
+  return { ...data, tag, total: matching.length, totalPages, posts: matching.slice((pageNumber - 1) * perPage, pageNumber * perPage) };
 });

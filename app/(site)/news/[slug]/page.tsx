@@ -32,8 +32,11 @@ export default async function NewsArticle({ params }: Props) {
     </section>
     <section className="page-content news-article" style={{ backgroundColor: page.acf?.body_background_color || '#ffffff' }}>
       <div className="article-content">
-        <Link className="article-back" href="/news/">← Back to news</Link>
+        <Link className="article-back news-back-link" href="/news/">← All news</Link>
         <div className="prose" dangerouslySetInnerHTML={{ __html: richText(page.content?.html, site, { preserveLinks: true }) }} />
+        {!!page.tags?.length && <nav className="article-tags" aria-label="Article tags">
+          <span>Tags</span>{page.tags.map((tag) => <Link key={tag.id} href={tag.path} rel="tag">{tag.name}</Link>)}
+        </nav>}
         <ArticleNavigation previous={previous} next={next} site={site} />
       </div>
     </section>

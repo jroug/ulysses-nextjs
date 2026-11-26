@@ -122,7 +122,12 @@ export interface CmsSite {
   frontend?: { base_url: string; domain_name: string };
 }
 
+export interface NewsTag {
+  id: number; name: string; slug: string; path: string; description?: string; count?: number;
+}
+
 export interface CmsPage {
+  tags?: NewsTag[];
   id: number;
   title: string;
   is_homepage: boolean;
@@ -167,6 +172,7 @@ export interface NavigationData {
 }
 
 export interface NewsPostSummary {
+  tags?: NewsTag[];
   id: number;
   slug: string;
   path: string;
@@ -178,6 +184,7 @@ export interface NewsPostSummary {
 }
 
 export interface NewsIndex {
+  tags?: NewsTag[];
   posts_per_page: number;
   total: number;
   posts: NewsPostSummary[];
